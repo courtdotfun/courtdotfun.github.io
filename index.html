@@ -138,6 +138,105 @@
             background: #333333;
         }
 
+        /* Subscribe form */
+        .subscribe-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .subscribe-label {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .subscribe-form {
+            display: flex;
+            gap: 0.5rem;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .subscribe-input {
+            flex: 1 1 auto;
+            min-width: 220px;
+            padding: 0.75rem 1rem;
+            border-radius: 9999px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            outline: none;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12) inset;
+        }
+
+        .subscribe-input::placeholder {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .subscribe-button {
+            background: rgba(255, 255, 255, 0.18);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            padding: 0.75rem 1.1rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+            backdrop-filter: blur(10px);
+        }
+
+        .subscribe-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+            background: rgba(255, 255, 255, 0.28);
+        }
+
+        /* Juror grid */
+        .juror-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 0.75rem;
+            width: 100%;
+        }
+
+        .juror-card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.45rem;
+            padding: 0.6rem 0.8rem;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+            font-size: 0.9rem;
+            font-weight: 600;
+            backdrop-filter: blur(8px);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .juror-card:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.18);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .juror-emoji {
+            font-size: 1.05rem;
+        }
+
+        
+
         .x-icon {
             width: 18px;
             height: 18px;
@@ -213,6 +312,19 @@
                 bottom: 1rem;
                 text-align: center;
             }
+
+            .subscribe-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .subscribe-button {
+                width: 100%;
+            }
+
+            .juror-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
         }
     </style>
 </head>
@@ -237,6 +349,25 @@
             <p class="subtitle">Justice democratized by game theory...<br>Dispute resolution made fun!</p>
             
             <div class="cta-container">
+                <div class="juror-grid" aria-label="Juror classes">
+                    <div class="juror-card"><span class="juror-emoji">🧱</span><span class="juror-title">The Builder</span></div>
+                    <div class="juror-card"><span class="juror-emoji">📈</span><span class="juror-title">The Trader</span></div>
+                    <div class="juror-card"><span class="juror-emoji">📣</span><span class="juror-title">The Influencer</span></div>
+                    <div class="juror-card"><span class="juror-emoji">🖼️</span><span class="juror-title">The Collector</span></div>
+                </div>
+                <div class="subscribe-wrapper">
+                    <label class="subscribe-label" for="bd-email">Choose your class and report for jury duty</label>
+                    <form
+                        action="https://buttondown.com/api/emails/embed-subscribe/court"
+                        method="post"
+                        target="popupwindow"
+                        onsubmit="window.open('https://buttondown.com/court', 'popupwindow')"
+                        class="subscribe-form" novalidate
+                    >
+                        <input type="email" name="email" id="bd-email" class="subscribe-input" placeholder="you@example.com" autocomplete="email" />
+                        <input type="submit" value="Subscribe" class="subscribe-button" />
+                    </form>
+                </div>
                 <a href="https://twitter.com/courtdotfun" target="_blank" rel="noopener noreferrer" class="notify-button pulse">
                     <svg class="x-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
