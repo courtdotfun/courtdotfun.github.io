@@ -13,7 +13,8 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background:
+                radial-gradient(1200px 800px at 20% 10%, #0e1726 0%, #0b0f1a 60%, #070a12 100%);
             min-height: 100vh;
             overflow-x: hidden;
         }
@@ -34,18 +35,22 @@
             left: 0;
             right: 0;
             bottom: 0;
-            opacity: 0.1;
-            background-image: radial-gradient(circle at 25% 25%, #ffffff 2px, transparent 2px),
-                              radial-gradient(circle at 75% 75%, #ffffff 2px, transparent 2px);
-            background-size: 60px 60px;
-            animation: float 20s ease-in-out infinite;
+            opacity: 1;
+            background-image:
+                radial-gradient(600px 600px at 5% 15%, rgba(0, 255, 163, 0.18), transparent 60%),
+                radial-gradient(800px 800px at 95% 10%, rgba(220, 31, 255, 0.14), transparent 60%),
+                radial-gradient(700px 700px at 30% 85%, rgba(20, 241, 149, 0.12), transparent 60%),
+                repeating-linear-gradient(0deg, rgba(255,255,255,0.04), rgba(255,255,255,0.04) 1px, transparent 1px, transparent 24px),
+                repeating-linear-gradient(90deg, rgba(255,255,255,0.04), rgba(255,255,255,0.04) 1px, transparent 1px, transparent 24px);
+            background-repeat: no-repeat;
+            background-size: 120% 120%, 120% 120%, 120% 120%, 100% 100%, 100% 100%;
+            animation: aurora 24s ease-in-out infinite alternate;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) translateX(0px); }
-            25% { transform: translateY(-10px) translateX(5px); }
-            50% { transform: translateY(5px) translateX(-5px); }
-            75% { transform: translateY(-5px) translateX(10px); }
+        @keyframes aurora {
+            0%   { background-position: 0% 0%, 100% 0%, 0% 100%, 0 0, 0 0; }
+            50%  { background-position: 12% 6%, 90% 4%, 10% 86%, 0 10px, 10px 0; }
+            100% { background-position: 20% 12%, 80% 8%, 16% 80%, 0 20px, 20px 0; }
         }
 
         .logo-container {
@@ -68,7 +73,7 @@
         }
 
         .gavel-icon:hover {
-            transform: translateY(-5px);
+            transform: translateY(5px);
             background: rgba(255, 255, 255, 0.25);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }
@@ -78,10 +83,11 @@
             height: 40px;
             fill: white;
             transition: transform 0.3s ease;
+            transform-origin: 60% 40%;
         }
 
         .gavel-icon:hover .gavel-svg {
-            transform: rotate(10deg);
+            transform: rotate(-12deg);
         }
 
         .main-content {
@@ -278,14 +284,31 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            background: linear-gradient(45deg, #9945FF, #14F195);
+            position: relative;
             color: white;
             padding: 0.5rem 1rem;
             border-radius: 20px;
             font-size: 0.85rem;
             font-weight: 600;
             border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.06);
             backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .solana-badge::before {
+            content: "";
+            position: absolute;
+            inset: 1px;
+            border-radius: 18px;
+            background: linear-gradient(45deg, #9945FF, #14F195);
+            z-index: 0;
+            opacity: 0.85;
+        }
+
+        .solana-badge > * {
+            position: relative;
+            z-index: 1;
         }
 
         .solana-logo {
@@ -407,49 +430,57 @@
             window.open('https://twitter.com/courtdotfun', '_blank');
         }
 
-        // Add some interactive sparkle effects
+        // Grid-aligned cursor pulse effect
+        let lastPulse = 0;
+        const bgPattern = document.querySelector('.background-pattern');
         document.addEventListener('mousemove', (e) => {
-            if (Math.random() < 0.1) {
-                createSparkle(e.clientX, e.clientY);
+            const now = performance.now();
+            if (now - lastPulse > 80) {
+                createGridPulse(e.clientX, e.clientY);
+                lastPulse = now;
             }
         });
 
-        function createSparkle(x, y) {
-            const sparkle = document.createElement('div');
-            sparkle.style.position = 'fixed';
-            sparkle.style.left = x + 'px';
-            sparkle.style.top = y + 'px';
-            sparkle.style.width = '4px';
-            sparkle.style.height = '4px';
-            sparkle.style.background = 'white';
-            sparkle.style.borderRadius = '50%';
-            sparkle.style.pointerEvents = 'none';
-            sparkle.style.zIndex = '1000';
-            sparkle.style.animation = 'sparkle 1s ease-out forwards';
-            
-            document.body.appendChild(sparkle);
-            
+        function createGridPulse(x, y) {
+            const gridSize = 24;
+            let left = x - gridSize / 2;
+            let top = y - gridSize / 2;
+            if (bgPattern) {
+                const rect = bgPattern.getBoundingClientRect();
+                const relX = x - rect.left;
+                const relY = y - rect.top;
+                left = Math.round(relX / gridSize) * gridSize + rect.left - gridSize / 2;
+                top = Math.round(relY / gridSize) * gridSize + rect.top - gridSize / 2;
+            }
+            const pulse = document.createElement('div');
+            pulse.style.position = 'fixed';
+            pulse.style.left = left + 'px';
+            pulse.style.top = top + 'px';
+            pulse.style.width = gridSize + 'px';
+            pulse.style.height = gridSize + 'px';
+            pulse.style.borderRadius = '6px';
+            pulse.style.background = 'linear-gradient(45deg, rgba(0,255,163,0.18), rgba(220,31,255,0.18))';
+            pulse.style.border = '1px solid rgba(255,255,255,0.12)';
+            pulse.style.boxShadow = '0 0 24px rgba(0, 255, 163, 0.12), 0 0 24px rgba(220, 31, 255, 0.12)';
+            pulse.style.pointerEvents = 'none';
+            pulse.style.zIndex = '500';
+            pulse.style.animation = 'gridPulse 800ms ease-out forwards';
+            pulse.style.mixBlendMode = 'screen';
+
+            document.body.appendChild(pulse);
+
             setTimeout(() => {
-                sparkle.remove();
-            }, 1000);
+                pulse.remove();
+            }, 900);
         }
 
-        // Add sparkle animation
+        // Grid pulse animation
         const style = document.createElement('style');
         style.textContent = `
-            @keyframes sparkle {
-                0% {
-                    opacity: 1;
-                    transform: scale(0) rotate(0deg);
-                }
-                50% {
-                    opacity: 1;
-                    transform: scale(1) rotate(180deg);
-                }
-                100% {
-                    opacity: 0;
-                    transform: scale(0) rotate(360deg);
-                }
+            @keyframes gridPulse {
+                0% { opacity: 0.6; transform: scale(1); }
+                60% { opacity: 0.35; }
+                100% { opacity: 0; transform: scale(1.2); }
             }
         `;
         document.head.appendChild(style);
